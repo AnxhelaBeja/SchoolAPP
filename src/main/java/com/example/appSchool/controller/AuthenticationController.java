@@ -23,12 +23,6 @@ private final AuthenticationService authService;
         return ResponseEntity.ok(authService.register(request));
     }
 
-    //    @PostMapping("/register/auth")
-//    public ResponseEntity <AuthenticationResponse> register(
-//            @RequestBody User1 request
-//    ){
-//        return ResponseEntity.ok(authService.register(request));
-//    }
     @PostMapping("/login/auth")
     public ResponseEntity <AuthenticationResponse> login(
             @RequestBody User1 request

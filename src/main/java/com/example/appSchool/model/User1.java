@@ -19,19 +19,12 @@ public class User1 implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name= "id")
     private Long id;
-//    @Column(name="firstName")
-//@Transient
-//private String firstName;
-//    @Column(name= "lastName")
     @Column(name="username")
     private String username;
     @Column(name="password")
     private String password;
     @Enumerated(value = EnumType.STRING)
      Rolee role;
-    //    @OneToOne
-//    @JoinColumn(name = "role_id")
-//   private Role role;
 
     public User1() {
     }
@@ -102,7 +95,4 @@ public class User1 implements UserDetails {
     public void setRole(Rolee role) {
         this.role = role;
     }
-
-
-
 }

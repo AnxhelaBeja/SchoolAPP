@@ -18,20 +18,13 @@ public class Professor {
     private String firstName;
     @Column(unique = true, nullable = false)
     private String lastName;
-//    private String email;
 
     @OneToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "user_id", nullable = false)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User1 user1;
     @OneToMany(mappedBy = "professor")
     private List<Student> students = new ArrayList<>();
 
-
-
-    public void addStudent(Student student) {
-        this.students.add(student);
-    }
 
     public Professor(){
 

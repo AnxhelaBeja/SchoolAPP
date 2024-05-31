@@ -37,11 +37,14 @@ import java.util.Optional;
         StudentAssignment studentAssignment = studentAssignmentService.addAssignmentWithStudent(studentAssignmentDto);
         return ResponseEntity.ok(studentAssignment);
     }
-    @PutMapping("/assignments/{id}/grade")
-    public ResponseEntity<Void> addGradeToAssignment(@PathVariable Long id, @RequestParam int grade) {
-        studentAssignmentService.addGradeToAssignment(id, grade);
-        return ResponseEntity.ok().build();
+    @PostMapping("/{studentAssignmentId}/grade")
+    public ResponseEntity<StudentAssignment> addGradeToAssignment(
+            @PathVariable Long studentAssignmentId,
+            @RequestParam int grade) {
+        StudentAssignment updatedAssignment = studentAssignmentService.addGradeToAssignment(studentAssignmentId, grade);
+        return ResponseEntity.ok(updatedAssignment);
     }
+
     @GetMapping("/{studentId}/averageGrade")
     public ResponseEntity<Map<String, Object>> getAverageGradeByStudentId(@PathVariable Long studentId) {
         return studentAssignmentService.getAverageGradeByStudentId(studentId);
@@ -74,55 +77,4 @@ import java.util.Optional;
         Map<String, Object> result = studentAssignmentService.getAverageAndLetterGrade(studentId);
         return ResponseEntity.ok(result);
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//    @GetMapping("/{studentAssignmentId}/grade")
-//    public ResponseEntity<Integer> getGradeById(@PathVariable Long studentAssignmentId) {
-//        Optional<Integer> grade = studentAssignmentService.getGradeById(studentAssignmentId);
-//        return grade.map(ResponseEntity::ok)
-//                .orElse(ResponseEntity.notFound().build());
-//    }
-
-
-//    @GetMapping("/{studentId}/grades")
-//    public ResponseEntity<List<StudentAssignment>> getGradesByStudentId(@PathVariable Long studentId) {
-//        return ResponseEntity.ok(studentAssignmentService.getGradesByStudentId(studentId));
-//    }
-
-
-    //    @GetMapping("/{assignmentId}/professor/{professorId}/averageGrade")
-//    public ResponseEntity<Double> getAverageGradeForAssignmentByProfessor(@PathVariable Long assignmentId, @PathVariable Long professorId) {
-//        double averageGrade = studentAssignmentService.getAverageGradeForAssignmentByProfessor(assignmentId, professorId);
-//        return ResponseEntity.ok(averageGrade);
-//    }
-
-
-//    @GetMapping("/sectionAndOverallAverages")
-//    public ResponseEntity<Map<String, Object>> getSectionAndOverallAverages() {
-//        Map<String, Object> averages = studentAssignmentService.calculateSectionAndOverallAverages();
-//        return ResponseEntity.ok(averages);
-//    }
-    //    @GetMapping("/{studentId}/averageGrade")
-//    public ResponseEntity<Map<String, Object>> getAverageGradeByStudentId(@PathVariable Long studentId) {
-//        Map<String, Object> response = studentAssignmentService.getAverageGradeByStudentId(studentId);
-//        if (response == null) {
-//            return ResponseEntity.notFound().build();
-//        }
-//        return ResponseEntity.ok(response);
-//    }200okk
-
-}
+  }

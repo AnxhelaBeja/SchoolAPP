@@ -35,48 +35,4 @@ import org.springframework.web.bind.annotation.*;
           return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An unexpected error occurred.");
         }
       }
-
-
-//  @PutMapping("/{userId}")
-//  public ResponseEntity<String> updateUserProperties(
-//          @PathVariable Long userId,
-//          @RequestBody UserUpdateDTO userUpdateDTO
-//  ) {
-//    try {
-//      user1Service.editProperties(userId, userUpdateDTO);
-//      return ResponseEntity.ok("User updated successfully.");
-//    } catch (EntityNotFoundException e) {
-//      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-//    } catch (IllegalStateException e) {
-//      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-//    } catch (Exception e) {
-//      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An unexpected error occurred.");
-//    }
-//  }
-
-
-
-}
-
-//@PostMapping("/createUserForProfessor/{professorId}")
-//public ResponseEntity<User1Dto> createUserForProfessor(@PathVariable Long professorId) {
-//  try {
-//    User1Dto createdUser = user1Service.createUserForProfessor(professorId);
-//    return ResponseEntity.ok(createdUser);
-//  } catch (EntityNotFoundException e) {
-//    return ResponseEntity.notFound().build();
-//  }
-//}
-
-
-
-
-//    @PostMapping("/createUserForProfessor/{professorId}")
-//    public ResponseEntity<User1Dto> createUserForProfessor(@PathVariable Long professorId) {
-//        try {
-//            User1Dto createdUser = user1Service.createUser1ForProfessor(professorId);
-//            return ResponseEntity.ok(createdUser);
-//        } catch (EntityNotFoundException e) {
-//            return ResponseEntity.notFound().build();
-//        }
-//    }
+    }

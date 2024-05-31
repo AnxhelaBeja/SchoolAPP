@@ -28,7 +28,6 @@ public class StudentAssignment {
     private  Double avg;
 
 
-
     public StudentAssignment() {
 
     }

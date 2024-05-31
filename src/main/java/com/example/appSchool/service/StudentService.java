@@ -33,9 +33,9 @@ public class StudentService {
 
     }
 
-        public void changeStudentState(Long studentId, boolean newState) {
-
-        Student student = studentRepository.findById(studentId).orElse(null);
+    public void changeStudentState(String username, boolean newState) {
+        User1 user = user1Repository.findByUsername(username).orElseThrow();
+        Student student = studentRepository.findByUser1(user).orElse(null);
 
         if (student != null) {
             student.setState(newState);
@@ -50,44 +50,7 @@ public class StudentService {
 
 
 
-//    @Transactional
-//    public Student createStudent(StudentExtendedDto studentDto) {
-//        Optional<Student> existingStudent = studentRepository.findByFirstNameAndLastName(studentDto.getFirstName(), studentDto.getLastName());
-//        if (existingStudent.isPresent()) {
-//            throw new EntityExistsException("Student with name " + studentDto.getFirstName() + " " + studentDto.getLastName() + " already exists.");
-//        }
-//
-//        User1 newUser = new User1();
-//        newUser.setUsername(studentDto.getUsername());
-//        newUser.setPassword(studentDto.getPassword());
-//        newUser.setRole(Rolee.STUDENT);
-//        User1 savedUser = user1Repository.save(newUser);
-//
-//        Student newStudent = studentMapper.toEntity(studentDto);
-//        newStudent.setUser1(savedUser);
-//
-//        return studentRepository.save(newStudent);
-//    }
 
-
-
-//    public ResponseEntity<String> updateStudent(Long studentId, StudentExtendedDto studentExtendedDto) {
-//        Optional<Student> studentOptional = studentRepository.findById(studentId);
-//
-//        if (studentOptional.isPresent()) {
-//            Student student = studentOptional.get();
-//
-//            student.setFirstName(studentExtendedDto.getFirstName());
-//            student.setLastName(studentExtendedDto.getLastName());
-//            student.setEmail(studentExtendedDto.getEmail());
-//            student.setAddress(studentExtendedDto.getAddress());
-//
-//         studentRepository.save(student);
-//            return ResponseEntity.ok("Student updated successfully!");
-//        } else {
-//            return ResponseEntity.notFound().build();
-//        }
-//    }
 
 
 

@@ -14,10 +14,6 @@ public class AssignmentDto {
     private String finalExam;
     private Long professorId;
 
-
-
-
-
     public AssignmentDto() {
     }
 

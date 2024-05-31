@@ -12,6 +12,8 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import java.util.Optional;
 
@@ -28,12 +30,7 @@ public class StudentAssignmentService {
     public final StudentAssignmentRepository studentAssignmentRepository;
     private final StudentRepository studentRepository;
     private final AssignmentRepository assignmentRepository;
-
-//    public StudentAssignment getById(Long id) {
-//        StudentAssignment studentAssignment = studentAssignmentRepository.findById(id)
-//                .orElseThrow(() -> new EntityNotFoundException("Not found"));
-//        return new studentAssignment;
-//    }
+    private final JavaMailSender javaMailSender;
 
 
     public StudentAssignment addAssignmentWithStudent(StudentAssignmentDto studentAssignmentDto) {
@@ -58,8 +55,29 @@ public class StudentAssignmentService {
 
         studentAssignment.setGrade(grade);
         studentAssignmentRepository.save(studentAssignment);
+        sendEmailNotification(studentAssignment);
+
         return studentAssignment;
     }
+
+
+    private void sendEmailNotification(StudentAssignment studentAssignment) {
+        Student student = studentAssignment.getStudent();
+        Assignment assignment = studentAssignment.getAssignment();
+        String email = student.getEmail();
+        String subject = "Njoftim për Notën";
+        String message = String.format("I nderuar %s, ju keni marrë një notë prej %d për detyrën: %s",
+                student.getUser1().getUsername(), studentAssignment.getGrade(), assignment.getAssignmentName());
+
+        SimpleMailMessage mailMessage = new SimpleMailMessage();
+        mailMessage.setTo(email);
+        mailMessage.setSubject(subject);
+        mailMessage.setText(message);
+        javaMailSender.send(mailMessage);
+    }
+
+
+
 
     public ResponseEntity<Map<String, Object>> getAverageGradeByStudentId(Long studentId) {
         Optional<Student> optionalStudent = studentRepository.findById(studentId);
@@ -160,128 +178,8 @@ public class StudentAssignmentService {
         } else {
             return "F";
         }
-
-
     }
-   
 }
-
-
-
-
-
-
-
-
-//    public Optional<StudentAssignment> getGradeById(Long studentAssignmentId) {
-//        return studentAssignmentRepository.findById(studentAssignmentId);
-//    }
-//    public double getAverageGradeByStudentId(Long studentId) {
-//        List<StudentAssignment> studentAssignments = studentAssignmentRepository.findByStudentId(studentId);
-//        if (studentAssignments.isEmpty()) {
-//            return 0.0;
-//        }
-//
-//        double totalGrade = 0.0;
-//        for (StudentAssignment studentAssignment : studentAssignments) {
-//            totalGrade += studentAssignment.getGrade();
-//        }
-//        return totalGrade / studentAssignments.size();
-//    } eshte ok
-
-
-
-    //eshte 200ok
-//    public double getAverageGradeForAssignmentByProfessor(Long assignmentId, Long professorId) {
-//        List<StudentAssignment> studentAssignments = studentAssignmentRepository.findByAssignmentIdAndAssignmentProfessorId(assignmentId, professorId);
-//        if (studentAssignments.isEmpty()) {
-//            return 0.0;
-//        }
-//
-//        double totalGrade = 0.0;
-//        for (StudentAssignment studentAssignment : studentAssignments) {
-//            totalGrade += studentAssignment.getGrade();
-//        }
-//        return totalGrade / studentAssignments.size();
-//    }
-
-
-
-
-
-
-//    public Map<String, Object> calculateSectionAndOverallAverages() {
-//        List<StudentAssignment> allAssignments = studentAssignmentRepository.findAll();
-//        if (allAssignments.isEmpty()) {
-//            return Collections.emptyMap();
-//        }
-//
-//        Map<String, Double> sectionGrades = new HashMap<>();
-//        Map<String, Integer> sectionCounts = new HashMap<>();
-//        double totalGrade = 0.0;
-//
-//        for (StudentAssignment studentAssignment : allAssignments) {
-//            String section = studentAssignment.getStudent().getSection();
-//            int grade = studentAssignment.getGrade();
-//
-//            totalGrade += grade;
-//
-//            sectionGrades.put(section, sectionGrades.getOrDefault(section, 0.0) + grade);
-//            sectionCounts.put(section, sectionCounts.getOrDefault(section, 0) + 1);
-//        }
-//
-//        Map<String, Double> sectionAverages = new HashMap<>();
-//        for (String section : sectionGrades.keySet()) {
-//            sectionAverages.put(section, sectionGrades.get(section) / sectionCounts.get(section));
-//        }
-//
-//        double overallAverage = totalGrade / allAssignments.size();
-//
-//        Map<String, Object> result = new HashMap<>();
-//        result.put("sectionAverages", sectionAverages);
-//        result.put("overallAverage", overallAverage);
-//
-//        return result;
-//
-//
-//    }
-
-//
-//public Map<String, Object> getAverageGradeByStudentId(Long studentId) {
-//    Optional<Student> optionalStudent = studentRepository.findById(studentId);
-//
-//    if (optionalStudent.isEmpty()) {
-//        Map<String, Object> response = new HashMap<>();
-//        response.put("student", Map.of("username", null, "email", null));
-//        response.put("average", null);
-//        return response;
-//    }
-//
-//    Student student = optionalStudent.get();
-//    User1 user = student.getUser1();
-//
-//    List<StudentAssignment> studentAssignments = studentAssignmentRepository.findByStudentId(studentId);
-//
-//    if (studentAssignments.isEmpty()) {
-//        Map<String, Object> response = new HashMap<>();
-//        response.put("student", Map.of("username", user != null ? user.getUsername() : null, "email", student.getEmail()));
-//        response.put("average", null);
-//        return response;
-//    }
-//
-//    double totalGrade = 0.0;
-//    for (StudentAssignment studentAssignment : studentAssignments) {
-//        totalGrade += studentAssignment.getGrade();
-//    }
-//    double averageGrade = totalGrade / studentAssignments.size();
-//    Map<String, Object> response = new HashMap<>();
-//    response.put("student", Map.of("username", user != null ? user.getUsername() : null, "email", student.getEmail()));
-//    response.put("average", averageGrade);
-//    return response;
-//}200okk
-
-
-
 
 
 

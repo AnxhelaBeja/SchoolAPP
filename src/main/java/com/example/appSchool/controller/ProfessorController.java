@@ -30,20 +30,6 @@ public class ProfessorController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("A problem occurred while creating the student: " + e.getMessage());
         }
     }
-
-
-
-
-
-//    @PostMapping("/professors/students")
-//    public ResponseEntity<String> createStudentForProfessor(@RequestBody Student student) {
-//        try {
-//            professorService.createStudent(student);
-//            return ResponseEntity.ok("The student was successfully created and connected to the professor.");
-//        } catch (Exception e) {
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("A problem occurred while creating the student: " + e.getMessage());
-//        }
-//    }
 }
 
 

@@ -23,9 +23,9 @@ public class User1Service {
     public final ProfessorRepository professorRepository;
     public final StudentRepository studentRepository;
 
-    public User1Dto getById(Long id){
+    public User1Dto getById(Long id) {
         User1 user1 = user1Repository.findById(id)
-                .orElseThrow(()-> new EntityNotFoundException("Not found!"));
+                .orElseThrow(() -> new EntityNotFoundException("Not found!"));
         return new User1Dto(user1.getId(), user1.getUsername(), user1.getPassword());
     }
 
@@ -79,33 +79,7 @@ public class User1Service {
             professor.setLastName(userUpdateDTO.getLastName());
         }
     }
-
-
-
 }
-
-
-
-
-
-
-
-//    public User1 createUser(String username, String password) {
-//        User1 user1 = new User1();
-//
-//        user1.setUsername(username);
-//        user1.setPassword(password);
-//
-//        user1.setRole(Rolee.PROFESSOR);
-//        user1 = user1Repository.save(user1);
-//
-//        return user1;
-//    }
-//    public boolean login(String username, String password) {
-//        Optional<User1> userOptional = user1Repository.findByUsername(username);
-//
-//        return userOptional.isPresent() && userOptional.get().getPassword().equals(password);
-//    }
 
 
 

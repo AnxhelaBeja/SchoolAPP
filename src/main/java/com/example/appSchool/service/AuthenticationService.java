@@ -49,28 +49,6 @@ public class AuthenticationService {
         return new AuthenticationResponse(token);
     }
 
-//    public AuthenticationResponse register(User1   request) {
-//       User1 user = new User1();
-////       user.setFirstName(request.getFirstName());
-////       user.setLastName(request.getLastName());
-//       user.setUsername(request.getUsername());
-//       user.setPassword(passwordEncoder.encode(request.getPassword()));
-//
-//       user.setRole(Rolee.PROFESSOR);
-//
-//       user = user1Repository.save(user);
-//
-//        Professor professor = new Professor();
-//        professor.setFirstName(request.getFirstName());
-//        professor.setLastName(request.getLastName());
-//        professor.setUser1(user);
-//
-//        professor = professorRepository.save(professor);
-//
-//       String token = jwtService.generateToken(user);
-//       return new AuthenticationResponse(token);
-//    }
-
     public AuthenticationResponse authenticate(User1 request) {
            authenticationManager.authenticate(
                    new UsernamePasswordAuthenticationToken(

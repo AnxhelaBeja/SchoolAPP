@@ -30,8 +30,6 @@ public class Student {
             (cascade=CascadeType.ALL,mappedBy="student")
    private Set<StudentAssignment> studentAssignments;
     @ManyToOne
-//    @JoinColumn(name = "professor_id", nullable = false, updatable = false)
-
     @JoinColumn(name = "professor_id")
     private Professor professor;
 

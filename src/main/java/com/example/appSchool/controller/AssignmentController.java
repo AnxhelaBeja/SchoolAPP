@@ -30,6 +30,4 @@ import org.springframework.web.bind.annotation.*;
 
         return ResponseEntity.ok(assignment);
     }
-
-
 }

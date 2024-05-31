@@ -17,7 +17,7 @@ public class StudentDto {
     private String email;
     private String address;
     private Professor professor;
-    //private double average;
+
  public StudentDto(Long studentId, String firstName, String lastName,
                    String email, String address, Professor professor){
      this.studentId=studentId;
