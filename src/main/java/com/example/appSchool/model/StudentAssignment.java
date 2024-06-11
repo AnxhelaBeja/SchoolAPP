@@ -3,6 +3,9 @@ package com.example.appSchool.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+
 @Data
 
 @Entity
@@ -17,12 +20,14 @@ public class StudentAssignment {
     private int grade;
 
     @ManyToOne
-    @JoinColumn(name = "studentId")
+    @JoinColumn(name = "student_id")
     private Student student;
 
     @ManyToOne
-    @JoinColumn(name = "assignmentId")
+    @JoinColumn(name = "assignment_id")
     private Assignment assignment;
+    private LocalDate assignmentDate;
+    private LocalDate notificationDate;
 
     @Transient
     private  Double avg;
@@ -69,5 +74,21 @@ public class StudentAssignment {
 
     public void setAssignment(Assignment assignment) {
         this.assignment = assignment;
+    }
+
+    public LocalDate getAssignmentDate() {
+        return assignmentDate;
+    }
+
+    public void setAssignmentDate(LocalDate assignmentDate) {
+        this.assignmentDate = assignmentDate;
+    }
+
+    public LocalDate getNotificationDate() {
+        return notificationDate;
+    }
+
+    public void setNotificationDate(LocalDate notificationDate) {
+        this.notificationDate = notificationDate;
     }
 }

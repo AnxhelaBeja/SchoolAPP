@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
+
 
 @Data
 
@@ -16,6 +18,9 @@ public class Assignment {
     private String assignmentName;
     private String exercises;
     private String finalExam;
+
+
+
     @ManyToOne
     @JoinColumn(name = "professorId")
     @JsonIgnore
@@ -64,4 +69,20 @@ public class Assignment {
 
         this.professor = professor;
     }
+
+//    public LocalDate getAssignmentDate() {
+//        return assignmentDate;
+//    }
+//
+//    public void setAssignmentDate(LocalDate assignmentDate) {
+//        this.assignmentDate = assignmentDate;
+//    }
+//
+//    public LocalDate getNotificationDate() {
+//        return notificationDate;
+//    }
+//
+//    public void setNotificationDate(LocalDate notificationDate) {
+//        this.notificationDate = notificationDate;
+//    }
 }

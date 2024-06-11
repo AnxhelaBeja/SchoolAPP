@@ -1,5 +1,6 @@
 package com.example.appSchool.repository;
 
+import com.example.appSchool.model.Assignment;
 import com.example.appSchool.model.StudentAssignment;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -11,6 +12,7 @@ public interface StudentAssignmentRepository extends JpaRepository<StudentAssign
     List<StudentAssignment> findByAssignmentIdAndAssignmentProfessorId(Long assignmentId, Long professorId);
 
     List<StudentAssignment> findAllByStudentId(Long studentId);
+    List<StudentAssignment> findByAssignment(Assignment assignment);
 
 
 

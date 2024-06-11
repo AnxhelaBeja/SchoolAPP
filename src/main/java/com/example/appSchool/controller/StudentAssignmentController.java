@@ -5,6 +5,7 @@ import com.example.appSchool.model.dto.StudentAssignmentDto;
 import com.example.appSchool.service.StudentAssignmentService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,22 +21,16 @@ import java.util.Optional;
 
     private final StudentAssignmentService studentAssignmentService;
 
-
-//    @GetMapping("/{id}")
-//    public ResponseEntity<StudentAssignmentDto> getStudentAssignmentById(@PathVariable Long id) {
-//        StudentAssignmentDto studentAssignmentDto = studentAssignmentService.getById(id);
-//        return ResponseEntity.ok(studentAssignmentDto);
-//    }
-//      public ResponseEntity<StudentAssignmentDto> getById(@PathVariable Long id){
-//          return ResponseEntity.ok(studentAssignmentService.getById(id));
-//      }
-
     @PostMapping("/addAssignmentWithStudent")
-    public ResponseEntity<StudentAssignment> addAssignmentWithStudent(@RequestBody StudentAssignmentDto studentAssignmentDto)
-            throws EntityNotFoundException {
-
-        StudentAssignment studentAssignment = studentAssignmentService.addAssignmentWithStudent(studentAssignmentDto);
-        return ResponseEntity.ok(studentAssignment);
+    public ResponseEntity<String> addAssignmentWithStudent(@RequestBody StudentAssignmentDto studentAssignmentDto) {
+        try {
+            studentAssignmentService.addAssignmentWithStudent(studentAssignmentDto);
+            return ResponseEntity.status(HttpStatus.CREATED).body("Assignment added successfully.");
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while processing the request.");
+        }
     }
     @PostMapping("/{studentAssignmentId}/grade")
     public ResponseEntity<StudentAssignment> addGradeToAssignment(

@@ -4,6 +4,7 @@ import com.example.appSchool.model.Assignment;
 import com.example.appSchool.model.Student;
 import com.example.appSchool.model.StudentAssignment;
 import com.example.appSchool.model.User1;
+
 import com.example.appSchool.model.dto.StudentAssignmentDto;
 import com.example.appSchool.repository.AssignmentRepository;
 import com.example.appSchool.repository.StudentAssignmentRepository;
@@ -15,11 +16,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
-import java.util.Optional;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+
+import java.time.*;
+import java.util.*;
+
 import java.util.stream.Collectors;
 
 @Service
@@ -29,10 +31,10 @@ public class StudentAssignmentService {
 
     public final StudentAssignmentRepository studentAssignmentRepository;
     private final StudentRepository studentRepository;
-    private final AssignmentRepository assignmentRepository;
     private final JavaMailSender javaMailSender;
+    private final AssignmentRepository assignmentRepository;
 
-
+    @Transactional
     public StudentAssignment addAssignmentWithStudent(StudentAssignmentDto studentAssignmentDto) {
         StudentAssignment studentAssignment = new StudentAssignment();
 
@@ -44,12 +46,49 @@ public class StudentAssignmentService {
                 .orElseThrow(() -> new EntityNotFoundException("Assignment not found with id: " + studentAssignmentDto.getAssignmentId()));
         studentAssignment.setAssignment(assignment);
 
+        studentAssignment.setAssignmentDate(studentAssignmentDto.getAssignmentDate());
+        studentAssignment.setNotificationDate(studentAssignmentDto.getNotificationDate());
+
         studentAssignmentRepository.save(studentAssignment);
+        sendAssignmentEmail(student.getEmail(), assignment.getAssignmentName(), studentAssignmentDto.getAssignmentDate(), studentAssignmentDto.getAssignmentTime());
+
+//        sendAssignmentEmail(student.getEmail(), assignment.getAssignmentName(), studentAssignmentDto.getAssignmentDate());
+
+        LocalDateTime notificationDateTime = studentAssignmentDto.getNotificationDate().atStartOfDay();
+        Instant notificationInstant = notificationDateTime.atZone(ZoneId.systemDefault()).toInstant();
+
+        LocalTime notificationTime = LocalTime.of(9, 0);
+
+        if (LocalDate.now().isEqual(studentAssignmentDto.getNotificationDate()) && LocalTime.now().isAfter(notificationTime)) {
+            sendReminderEmail(student.getEmail(), assignment.getAssignmentName());
+        }
 
         return studentAssignment;
     }
+    private void sendAssignmentEmail(String studentEmail, String assignmentName, LocalDate assignmentDate, LocalTime assignmentTime) {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(studentEmail);
+        message.setSubject("New assignment added");
+        message.setText("Your new assignment \"" + assignmentName + "\" has been added for the date " + assignmentDate + " at " + assignmentTime);
+
+        javaMailSender.send(message);
+    }
+
+    private void sendReminderEmail(String studentEmail, String assignmentName) {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(studentEmail);
+        message.setSubject("Reminder for assignment");
+        message.setText("Careful! You have the assignment \"" + assignmentName + "\" for today\n. \n" +
+                "Don't forget to do it on time.");
+
+        javaMailSender.send(message);
+    }
+
 
     public StudentAssignment addGradeToAssignment(Long studentAssignmentId, int grade) {
+        if (grade < 0 || grade > 100) {
+            throw new IllegalArgumentException("The score must be between 0 and 100.");
+        }
         StudentAssignment studentAssignment = studentAssignmentRepository.findById(studentAssignmentId)
                 .orElseThrow(() -> new EntityNotFoundException("Student assignment not found with id: " + studentAssignmentId));
 
@@ -59,7 +98,6 @@ public class StudentAssignmentService {
 
         return studentAssignment;
     }
-
 
     private void sendEmailNotification(StudentAssignment studentAssignment) {
         Student student = studentAssignment.getStudent();
@@ -75,9 +113,6 @@ public class StudentAssignmentService {
         mailMessage.setText(message);
         javaMailSender.send(mailMessage);
     }
-
-
-
 
     public ResponseEntity<Map<String, Object>> getAverageGradeByStudentId(Long studentId) {
         Optional<Student> optionalStudent = studentRepository.findById(studentId);
@@ -113,8 +148,6 @@ public class StudentAssignmentService {
         response.put("average", averageGrade);
         return ResponseEntity.ok(response);
     }
-
-
 
     public String getAverageGradeForAssignmentByProfessor(Long assignmentId, Long professorId) {
         List<StudentAssignment> studentAssignments = studentAssignmentRepository.findByAssignmentIdAndAssignmentProfessorId(assignmentId, professorId);
@@ -180,8 +213,3 @@ public class StudentAssignmentService {
         }
     }
 }
-
-
-
-
-

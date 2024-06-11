@@ -2,22 +2,15 @@ package com.example.appSchool.service;
 
 import com.example.appSchool.model.*;
 import com.example.appSchool.model.dto.ProfessorDto;
-import com.example.appSchool.model.dto.ProfessorExtendedDto;
-import com.example.appSchool.model.dto.StudentExtendedDto;
-import com.example.appSchool.repository.AssignmentRepository;
 import com.example.appSchool.repository.ProfessorRepository;
 import com.example.appSchool.repository.StudentRepository;
 import com.example.appSchool.repository.User1Repository;
-import com.example.appSchool.service.shared.classMappers.ProfessorMapper;
 import jakarta.persistence.EntityNotFoundException;
-
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+
 
 
 @Service
