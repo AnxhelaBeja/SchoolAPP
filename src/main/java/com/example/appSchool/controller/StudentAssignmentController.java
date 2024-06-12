@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -72,4 +73,27 @@ import java.util.Optional;
         Map<String, Object> result = studentAssignmentService.getAverageAndLetterGrade(studentId);
         return ResponseEntity.ok(result);
     }
+
+
+    @PostMapping("/student/{studentId}/academicYear/{startYear}/sendReport")
+    public ResponseEntity<String> sendAcademicYearReport(@PathVariable Long studentId, @PathVariable int startYear) {
+        try {
+            studentAssignmentService.sendAcademicYearReport(studentId, startYear);
+            return ResponseEntity.status(HttpStatus.OK).body("Academic year report sent successfully.");
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while sending the report.");
+        }
+    }
+
+//    @GetMapping("/student/{studentId}/academicYear/{startYear}")
+//    public ResponseEntity<List<StudentAssignment>> getAssignmentsByStudentAndAcademicYear(@PathVariable Long studentId, @PathVariable int startYear) {
+//        try {
+//            List<StudentAssignment> assignments = studentAssignmentService.getAssignmentsByStudentAndAcademicYear(studentId, startYear);
+//            return ResponseEntity.ok(assignments);
+//        } catch (Exception e) {
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+//        }
+//    }
   }

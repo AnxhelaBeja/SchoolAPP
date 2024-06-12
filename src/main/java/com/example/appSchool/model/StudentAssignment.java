@@ -4,10 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 
 @Data
-
 @Entity
 @Table(name="student_assignment")
 public class StudentAssignment {

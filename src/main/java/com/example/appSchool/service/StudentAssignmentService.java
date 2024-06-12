@@ -52,12 +52,10 @@ public class StudentAssignmentService {
         studentAssignmentRepository.save(studentAssignment);
         sendAssignmentEmail(student.getEmail(), assignment.getAssignmentName(), studentAssignmentDto.getAssignmentDate(), studentAssignmentDto.getAssignmentTime());
 
-//        sendAssignmentEmail(student.getEmail(), assignment.getAssignmentName(), studentAssignmentDto.getAssignmentDate());
-
         LocalDateTime notificationDateTime = studentAssignmentDto.getNotificationDate().atStartOfDay();
         Instant notificationInstant = notificationDateTime.atZone(ZoneId.systemDefault()).toInstant();
 
-        LocalTime notificationTime = LocalTime.of(9, 0);
+        LocalTime notificationTime = LocalTime.of(11, 30);
 
         if (LocalDate.now().isEqual(studentAssignmentDto.getNotificationDate()) && LocalTime.now().isAfter(notificationTime)) {
             sendReminderEmail(student.getEmail(), assignment.getAssignmentName());
@@ -69,7 +67,7 @@ public class StudentAssignmentService {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(studentEmail);
         message.setSubject("New assignment added");
-        message.setText("Your new assignment \"" + assignmentName + "\" has been added for the date " + assignmentDate + " at " + assignmentTime);
+        message.setText("Hello!\n" + "Your new assignment \"" + assignmentName + "\" has been added for the date " + assignmentDate + " at " + assignmentTime + " \n \n Your School,\n" + "Thank you!" );
 
         javaMailSender.send(message);
     }
@@ -103,8 +101,8 @@ public class StudentAssignmentService {
         Student student = studentAssignment.getStudent();
         Assignment assignment = studentAssignment.getAssignment();
         String email = student.getEmail();
-        String subject = "Njoftim për Notën";
-        String message = String.format("I nderuar %s, ju keni marrë një notë prej %d për detyrën: %s",
+        String subject = "Grade Notice";
+        String message = String.format("Dear %s, You have received a grade of  %d for the assignment: %s",
                 student.getUser1().getUsername(), studentAssignment.getGrade(), assignment.getAssignmentName());
 
         SimpleMailMessage mailMessage = new SimpleMailMessage();
@@ -212,4 +210,44 @@ public class StudentAssignmentService {
             return "F";
         }
     }
+    @Transactional(readOnly = true)
+    public List<StudentAssignment> getAssignmentsByStudentAndAcademicYear(Long studentId, int startYear) {
+        LocalDate fallStartDate = LocalDate.of(startYear, 9, 1);
+        LocalDate springEndDate = LocalDate.of(startYear + 1, 6, 30);
+
+        return studentAssignmentRepository.findAssignmentsByStudentAndDateRange(studentId, fallStartDate, springEndDate);
+    }
+
+    @Transactional
+    public void sendAcademicYearReport(Long studentId, int startYear) {
+        List<StudentAssignment> assignments = getAssignmentsByStudentAndAcademicYear(studentId, startYear);
+
+        Student student = studentRepository.findById(studentId)
+                .orElseThrow(() -> new EntityNotFoundException("Student not found with id: " + studentId));
+
+        StringBuilder emailContent = new StringBuilder("Hello " + student.getFirstName() + " " + student.getLastName() + ",\n\nHere are your assignments and grades for the academic year " + startYear + "-" + (startYear + 1) + ":\n\n");
+
+        for (StudentAssignment assignment : assignments) {
+            emailContent.append("Assignment: ")
+                    .append(assignment.getAssignment().getAssignmentName())
+                    .append("\nDate: ")
+                    .append(assignment.getAssignmentDate())
+                    .append("\nGrade: ")
+                    .append(assignment.getGrade())
+                    .append("\n\n");
+        }
+
+        emailContent.append("Best regards,\nYour School");
+
+        sendEmail(student.getEmail(), "Academic Year Report", emailContent.toString());
+    }
+
+    private void sendEmail(String to, String subject, String text) {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(to);
+        message.setSubject(subject);
+        message.setText(text);
+        javaMailSender.send(message);
+    }
+
 }
