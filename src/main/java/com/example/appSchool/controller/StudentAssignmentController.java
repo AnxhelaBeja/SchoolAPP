@@ -2,6 +2,7 @@ package com.example.appSchool.controller;
 
 import com.example.appSchool.model.StudentAssignment;
 import com.example.appSchool.model.dto.StudentAssignmentDto;
+import com.example.appSchool.service.JwtService;
 import com.example.appSchool.service.StudentAssignmentService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +22,7 @@ import java.util.Optional;
   public class StudentAssignmentController {
 
     private final StudentAssignmentService studentAssignmentService;
+    private final JwtService jwtService;
 
     @PostMapping("/addAssignmentWithStudent")
     public ResponseEntity<String> addAssignmentWithStudent(@RequestBody StudentAssignmentDto studentAssignmentDto) {
@@ -87,13 +89,4 @@ import java.util.Optional;
         }
     }
 
-//    @GetMapping("/student/{studentId}/academicYear/{startYear}")
-//    public ResponseEntity<List<StudentAssignment>> getAssignmentsByStudentAndAcademicYear(@PathVariable Long studentId, @PathVariable int startYear) {
-//        try {
-//            List<StudentAssignment> assignments = studentAssignmentService.getAssignmentsByStudentAndAcademicYear(studentId, startYear);
-//            return ResponseEntity.ok(assignments);
-//        } catch (Exception e) {
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
-//        }
-//    }
   }
