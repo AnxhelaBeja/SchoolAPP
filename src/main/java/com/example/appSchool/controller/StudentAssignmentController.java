@@ -35,6 +35,7 @@ import java.util.Optional;
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while processing the request.");
         }
     }
+
     @PostMapping("/{studentAssignmentId}/grade")
     public ResponseEntity<StudentAssignment> addGradeToAssignment(
             @PathVariable Long studentAssignmentId,
@@ -88,5 +89,22 @@ import java.util.Optional;
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while sending the report.");
         }
     }
-
   }
+
+
+
+//    @PostMapping("/{studentAssignmentId}/add-grade")
+//    public ResponseEntity<StudentAssignment> addGradeToAssignment(@PathVariable Long studentAssignmentId, @RequestParam int grade) {
+//        StudentAssignment updatedStudentAssignment = studentAssignmentService.addGradeToAssignment(studentAssignmentId, grade);
+//        return ResponseEntity.ok(updatedStudentAssignment);
+//    }
+//    @GetMapping("/{studentAssignmentId}/get-decrypted-grade")
+//    public ResponseEntity<String> getDecryptedGrade(@PathVariable Long studentAssignmentId) {
+//        StudentAssignment studentAssignment = studentAssignmentService.getStudentAssignmentById(studentAssignmentId);
+//        int decryptedGrade = studentAssignmentService.getDecryptedGrade(studentAssignment);
+//        String assignmentName = studentAssignment.getAssignment().getAssignmentName();
+//
+//        String response = String.format("In this %s you got the grade %d.", assignmentName, decryptedGrade);
+//
+//        return ResponseEntity.ok(response);
+//    }

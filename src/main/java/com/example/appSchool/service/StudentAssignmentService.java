@@ -1,10 +1,6 @@
 package com.example.appSchool.service;
 
-import com.example.appSchool.model.Assignment;
-import com.example.appSchool.model.Student;
-import com.example.appSchool.model.StudentAssignment;
-import com.example.appSchool.model.User1;
-
+import com.example.appSchool.model.*;
 import com.example.appSchool.model.dto.StudentAssignmentDto;
 import com.example.appSchool.repository.AssignmentRepository;
 import com.example.appSchool.repository.StudentAssignmentRepository;
@@ -18,10 +14,11 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-
 import java.time.*;
-import java.util.*;
-
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -33,6 +30,7 @@ public class StudentAssignmentService {
     private final StudentRepository studentRepository;
     private final JavaMailSender javaMailSender;
     private final AssignmentRepository assignmentRepository;
+    private final GradeUtils gradeUtils;
 
     @Transactional
     public StudentAssignment addAssignmentWithStudent(StudentAssignmentDto studentAssignmentDto) {
@@ -83,7 +81,7 @@ public class StudentAssignmentService {
     }
 
 
-    public StudentAssignment addGradeToAssignment(Long studentAssignmentId, int grade) {
+        public StudentAssignment addGradeToAssignment(Long studentAssignmentId, int grade) {
         if (grade < 0 || grade > 100) {
             throw new IllegalArgumentException("The score must be between 0 and 100.");
         }
@@ -91,13 +89,13 @@ public class StudentAssignmentService {
                 .orElseThrow(() -> new EntityNotFoundException("Student assignment not found with id: " + studentAssignmentId));
 
         studentAssignment.setGrade(grade);
+
         studentAssignmentRepository.save(studentAssignment);
         sendEmailNotification(studentAssignment);
 
         return studentAssignment;
     }
-
-    private void sendEmailNotification(StudentAssignment studentAssignment) {
+        private void sendEmailNotification(StudentAssignment studentAssignment) {
         Student student = studentAssignment.getStudent();
         Assignment assignment = studentAssignment.getAssignment();
         String email = student.getEmail();
@@ -251,3 +249,53 @@ public class StudentAssignmentService {
     }
 
 }
+
+
+
+
+
+//public StudentAssignment getStudentAssignmentById(Long studentAssignmentId) {
+//        return studentAssignmentRepository.findById(studentAssignmentId)
+//                .orElseThrow(() -> new EntityNotFoundException("Student assignment not found with id: " + studentAssignmentId));
+//    }
+//    public StudentAssignment addGradeToAssignment(Long studentAssignmentId, int grade) {
+//        if (grade < 0 || grade > 100) {
+//            throw new IllegalArgumentException("The score must be between 0 and 100.");
+//        }
+//
+//        String encryptedGrade = gradeUtils.encryptGrade(grade);
+//
+//        StudentAssignment studentAssignment = studentAssignmentRepository.findById(studentAssignmentId)
+//                .orElseThrow(() -> new EntityNotFoundException("Student assignment not found with id: " + studentAssignmentId));
+//        studentAssignment.setGrade(grade);
+////        studentAssignment.setEncryptedGrade(encryptedGrade);
+//        studentAssignmentRepository.save(studentAssignment);
+//        sendEmailNotification(studentAssignment);
+//
+//        return studentAssignment;
+//    }
+//
+//    public int getDecryptedGrade(StudentAssignment studentAssignment) {
+//        String encryptedGrade = studentAssignment.getEncryptedGrade();
+//
+//        int decryptedGrade = gradeUtils.decryptGrade(encryptedGrade);
+//
+//        return decryptedGrade;
+//    }
+//    private void sendEmailNotification(StudentAssignment studentAssignment) {
+//        Student student = studentAssignment.getStudent();
+//        Assignment assignment = studentAssignment.getAssignment();
+//        String email = student.getEmail();
+//        String subject = "Grade Notice";
+//
+//        int decryptedGrade = gradeUtils.decryptGrade(studentAssignment.getEncryptedGrade());
+//
+//        String message = String.format("Dear %s, You have received a grade of  %d for the assignment: %s",
+//                student.getUser1().getUsername(), decryptedGrade, assignment.getAssignmentName());
+//
+//        SimpleMailMessage mailMessage = new SimpleMailMessage();
+//        mailMessage.setTo(email);
+//        mailMessage.setSubject(subject);
+//        mailMessage.setText(message);
+//        javaMailSender.send(mailMessage);
+//    }

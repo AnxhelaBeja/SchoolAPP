@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/password-reset")
+@RequestMapping("/reset-password")
 public class PasswordResetController {
 
     private final PasswordResetService passwordResetService;
@@ -39,3 +39,16 @@ public class PasswordResetController {
         }
     }
 }
+
+
+//    @PostMapping("/reset")
+//    public ResponseEntity<String> resetPassword(@RequestBody PasswordResetRequestDTO requestDTO) {
+//        try {
+//            log.info("Resetting password for token: {}", requestDTO.getToken());
+//            passwordResetService.resetPassword(requestDTO);
+//            return ResponseEntity.ok("Password reset successfully.");
+//        } catch (IllegalArgumentException e) {
+//            log.error("Error resetting password: {}", e.getMessage());
+//            return ResponseEntity.badRequest().body(e.getMessage());
+//        }
+//    }

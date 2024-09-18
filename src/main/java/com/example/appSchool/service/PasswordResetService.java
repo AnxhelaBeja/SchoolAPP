@@ -1,4 +1,5 @@
 package com.example.appSchool.service;
+
 import com.example.appSchool.model.Student;
 import com.example.appSchool.model.dto.PasswordResetRequestDTO;
 import com.example.appSchool.repository.StudentRepository;
@@ -24,8 +25,8 @@ public class PasswordResetService {
     private final PasswordEncoder passwordEncoder;
     private final User1Repository user1Repository;
 
-    @Value("app.password.reset.url=http://example.com/reset-password\n")
-    private String resetUrl;
+@Value("${app.password.reset.url:http://localhost:8080/reset-password}")
+private String resetUrl;
 
     private final Map<String, PasswordResetToken> tokenStore = new HashMap<>();
 
@@ -51,6 +52,7 @@ public class PasswordResetService {
 
         String recoveryLink = resetUrl + "?token=" + token;
 
+
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(email);
         message.setSubject("Password Recovery");
@@ -60,7 +62,6 @@ public class PasswordResetService {
 
         javaMailSender.send(message);
     }
-
     @Transactional
     public void resetPassword(PasswordResetRequestDTO requestDTO) {
         String token = requestDTO.getToken();
@@ -72,7 +73,8 @@ public class PasswordResetService {
             throw new IllegalArgumentException("Invalid or expired password reset token");
         }
 
-        Student student = passwordResetToken.getStudent();
+
+    Student student = passwordResetToken.getStudent();
         student.getUser1().setPassword(passwordEncoder.encode(newPassword));
         user1Repository.save(student.getUser1());
         studentRepository.save(student);

@@ -29,22 +29,23 @@ public class SecurityConfig {
     }
 
 
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(
-                        req ->req.requestMatchers("/login/**" ,"/register/**")
+                        req ->req.requestMatchers("/login/**" ,"/register/**", "/reset-password/**", "/static/**")
                                 .permitAll()
                                 .requestMatchers("/api/v1/Professor/**", "/api/v1/api/v1/StudentAssignment/**").hasAuthority(Rolee.PROFESSOR.name())
                                 .anyRequest()
                                 .authenticated())
-                                .userDetailsService(user1DetailsServiceImp)
-                                .sessionManagement(session -> session
-                                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                                .addFilterBefore(jwtAuthenticationFilter,
-                                        UsernamePasswordAuthenticationFilter.class)
-                                .build();
+                .userDetailsService(user1DetailsServiceImp)
+                .sessionManagement(session -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .addFilterBefore(jwtAuthenticationFilter,
+                        UsernamePasswordAuthenticationFilter.class)
+                .build();
     }
     @Bean
    public PasswordEncoder passwordEncoder() {

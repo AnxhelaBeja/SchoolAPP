@@ -14,6 +14,9 @@ public class StudentAssignment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+//    @Transient
+//    private String encryptedGrade;
+
     @Column()
     private int grade;
 
@@ -89,4 +92,14 @@ public class StudentAssignment {
     public void setNotificationDate(LocalDate notificationDate) {
         this.notificationDate = notificationDate;
     }
+//    public int getGrade() {
+//        if (this.encryptedGrade != null) {
+//            return GradeUtils.decryptGrade(this.encryptedGrade);
+//        }
+//        return 0;
+//    }
+//
+//    public void setGrade(int grade) {
+//        this.encryptedGrade = GradeUtils.encryptGrade(grade);
+//    }
 }
